@@ -1,10 +1,11 @@
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+//import 'dart:io';
+//import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 import 'package:nice_button/nice_button.dart';
 import 'package:intl/intl.dart';
+
 
 
 
@@ -30,59 +31,76 @@ class _ParkTrans extends State<ParkTrans> {
 
 
 
-  var now = new DateTime.now();
-
 
   TextEditingController plateNoController = TextEditingController();
 
   void confirmed(){
     if(plateNoController.text == ""){
-      var today = new DateTime.now();
-
-      var dateToday = DateFormat("yyyy-MM-dd").format(new DateTime.now());
-      var dateUntil = DateFormat("yyyy-MM-dd").format(today.add(new Duration(days: 7)));
-      print(dateToday);
-      print(dateUntil);
+//      var today = new DateTime.now();
+//      var dateToday = DateFormat("yyyy-MM-dd").format(new DateTime.now());
+//      var dateUntil = DateFormat("yyyy-MM-dd").format(today.add(new Duration(days: 7)));
+//      print(dateToday);
+//      print(dateUntil);
+//      print(selectedRadio);
     }
     else {
-      saveData();
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          // return object of type Dialog
-          return AlertDialog(
-            title: new Text(plateNoController.text),
-            content: new Text("Successfully Added"),
-            actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              new FlatButton(
-                child: new Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  plateNoController.text = "";
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+      if(selectedRadio == 0){
+
+      }
+      else{
+        saveData();
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: new Text(plateNoController.text),
+              content: new Text("Successfully Added"),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Close"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    plateNoController.text = "";
+                  },
+                ),
+              ],
+            );
+          },
+         );
+       }
+     }
+   }
 
   void saveData(){
 
-    print(plateNoController.text);
+      print(plateNoController.text);
 
-//    var today =DateFormat("dd-MM-yyyy").format(now);
+      var today = new DateTime.now();
 
-    var today = new DateTime.now();
+      var dateToday = DateFormat("yyyy-MM-dd").format(new DateTime.now());
+      var dataTimeToday = DateFormat("hh:mm").format(new DateTime.now());
+      var dateUntil = DateFormat("yyyy-MM-dd").format(today.add(new Duration(days: 7)));
 
-    var dateToday = DateFormat("yyyy-MM-dd").format(new DateTime.now());
-    var dateUntil = DateFormat("yyyy-MM-dd").format(today.add(new Duration(days: 7)));
 
-    print(dateToday);
-    print(dateUntil);
+      print(dateToday);
+      print(dataTimeToday);
+      print(dateUntil);
+      print(selectedRadio);
+  }
 
+  int selectedRadio;
+  @override
+  void initState(){
+    super.initState();
+    selectedRadio = 0;
+  }
+  void setSelectedRadio(int val){
+    setState(() {
+      selectedRadio = val;
+    });
   }
 
   @override
@@ -103,25 +121,28 @@ class _ParkTrans extends State<ParkTrans> {
       body: ListView(
           physics: BouncingScrollPhysics(),
           children: <Widget>[
-            Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
             child:NiceButton(
                 width: 255,
                 elevation: 0.0,
                 radius: 52.0,
                 text: "Open Camera",
-                icon: Icons.camera,
+                icon: Icons.camera_alt,
                 padding: const EdgeInsets.all(15),
                 background: Colors.blue,
                 onPressed: () {
                 print("hello");
               },
              ),
-      ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          ),
+
+
+
+          Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 3.0),
               child: new TextFormField(
                controller:plateNoController,
                autofocus: false,
-               enabled: false,
+//               enabled: false,
                style: TextStyle(fontSize: 70.0),
                     decoration: InputDecoration(
                     hintText: 'Plate Number',
@@ -134,25 +155,51 @@ class _ParkTrans extends State<ParkTrans> {
                   ),
             ),
          ),
-        Divider(
-          color: Colors.transparent,
-          height: 10.0,
+          Divider(
+            color: Colors.transparent,
+            height: 10.0,
+          ),
+          Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              child:Text('Vehicle Type',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17,color: Colors.black),),
+          ),
+          Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+           child: Row(
+             children: <Widget>[
+               Text("4 Wheels(100)"),
+               Radio(
+                value: 100,
+                groupValue: selectedRadio,
+                activeColor: Colors.blue,
+                onChanged:(val) {
+                    setSelectedRadio(val);
+                },
+               ),
+               Text("2 Wheels(50)"),
+               Radio(
+                 value: 50,
+                 groupValue: selectedRadio,
+                 activeColor: Colors.blue,
+                 onChanged:(val) {
+                   setSelectedRadio(val);
+                 },
+               ),
+             ]
+            ),
+          ),
+
+          Padding( padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+           child: Container(
+              width: 300.0,
+              child: ConfirmationSlider(
+                shadow:BoxShadow(color: Colors.black38, offset: Offset(1, 0),blurRadius: 1,spreadRadius: 1,),
+                foregroundColor:Colors.blue,
+                height:170.0,
+                width : 570.0,
+                onConfirmation: () => confirmed(),
+            ),),
         ),
-    Padding( padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-     child: Container(
-        width: 300.0,
-        child: ConfirmationSlider(
-          shadow:BoxShadow(color: Colors.black38, offset: Offset(1, 0),blurRadius: 1,spreadRadius: 1,),
-          foregroundColor:Colors.blue,
-          height:170.0,
-          width : 570.0,
-          onConfirmation: () => confirmed(),
-        ),),
-
-    ),
-
-       ],
-      ),
+      ],
+     ),
     );
   }
 }
