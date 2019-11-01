@@ -29,6 +29,8 @@ dependencies:
   nice_button: ^0.1.7
   firebase_core: 0.4.0+9
   intl: ^0.16.0
+  sqflite: any
+  path_provider: any
 
 
 dev_dependencies:

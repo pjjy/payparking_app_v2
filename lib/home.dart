@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'parkingtrans.dart';
+import 'parkingTransList.dart';
 
 class HomeT extends StatefulWidget {
   @override
@@ -26,6 +27,12 @@ class _Home extends State<HomeT> {
               fontSize: 13.0, // insert your font size here
             ),),
           ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.share_up),
+            title: Text('History',style: TextStyle(
+              fontSize: 13.0, // insert your font size here
+            ),),
+          ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -41,7 +48,14 @@ class _Home extends State<HomeT> {
           case 1:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: Text("sadasd"),
+                child: ParkTransList(),
+              );
+            });
+            break;
+          case 2:
+            returnValue = CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: Text('History ne'),
               );
             });
             break;

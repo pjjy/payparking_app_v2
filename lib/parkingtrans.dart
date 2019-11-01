@@ -1,24 +1,25 @@
-//import 'dart:io';
-//import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 import 'package:nice_button/nice_button.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
+import 'package:payparking_app/utils/db_helper.dart';
+
+
 
 
 
 
 class ParkTrans extends StatefulWidget {
-
   @override
   _ParkTrans createState() => _ParkTrans();
 }
-
-
 class _ParkTrans extends State<ParkTrans> {
 
-
+  final db = PayParkingDatabase();
 
 
 //  File pickedImage;
@@ -28,8 +29,6 @@ class _ParkTrans extends State<ParkTrans> {
 //      pickedImage = tempStore;
 //    });
 //  }
-
-
 
 
   TextEditingController plateNoController = TextEditingController();
@@ -54,7 +53,7 @@ class _ParkTrans extends State<ParkTrans> {
           context: context,
           builder: (BuildContext context) {
             // return object of type Dialog
-            return AlertDialog(
+            return CupertinoAlertDialog(
               title: new Text(plateNoController.text),
               content: new Text("Successfully Added"),
               actions: <Widget>[
@@ -74,21 +73,24 @@ class _ParkTrans extends State<ParkTrans> {
      }
    }
 
-  void saveData(){
+  void saveData() async{
 
-      print(plateNoController.text);
 
+      String plateNumber = plateNoController.text;
       var today = new DateTime.now();
-
       var dateToday = DateFormat("yyyy-MM-dd").format(new DateTime.now());
-      var dataTimeToday = DateFormat("hh:mm").format(new DateTime.now());
+      var dateTimeToday = DateFormat("yyyy-MM-dd hh:mm a").format(new DateTime.now());
       var dateUntil = DateFormat("yyyy-MM-dd").format(today.add(new Duration(days: 7)));
+      String amount = selectedRadio.toString();
 
-
+      print(plateNumber);
       print(dateToday);
-      print(dataTimeToday);
+      print(dateTimeToday);
       print(dateUntil);
-      print(selectedRadio);
+      print(amount);
+
+      await db.addTrans(plateNumber,dateToday,dateTimeToday,dateUntil,amount);
+
   }
 
   int selectedRadio;
@@ -110,7 +112,7 @@ class _ParkTrans extends State<ParkTrans> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
-        title: Text('Home'),
+        title: Text('Park Me'),
         textTheme: TextTheme(
             title: TextStyle(
                 color: Colors.black,
@@ -119,7 +121,7 @@ class _ParkTrans extends State<ParkTrans> {
         ),
       ),
       body: ListView(
-          physics: BouncingScrollPhysics(),
+//          physics: BouncingScrollPhysics(),
           children: <Widget>[
             Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
             child:NiceButton(
@@ -135,8 +137,6 @@ class _ParkTrans extends State<ParkTrans> {
               },
              ),
           ),
-
-
 
           Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 3.0),
               child: new TextFormField(
@@ -157,15 +157,15 @@ class _ParkTrans extends State<ParkTrans> {
          ),
           Divider(
             color: Colors.transparent,
-            height: 10.0,
+            height: 25.0,
           ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               child:Text('Vehicle Type',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17,color: Colors.black),),
           ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+          Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
            child: Row(
              children: <Widget>[
-               Text("4 Wheels(100)"),
+               Text("4 Wheels(100)",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold),),
                Radio(
                 value: 100,
                 groupValue: selectedRadio,
@@ -174,7 +174,7 @@ class _ParkTrans extends State<ParkTrans> {
                     setSelectedRadio(val);
                 },
                ),
-               Text("2 Wheels(50)"),
+               Text("2 Wheels(50)",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold),),
                Radio(
                  value: 50,
                  groupValue: selectedRadio,
