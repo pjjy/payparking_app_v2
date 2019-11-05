@@ -35,13 +35,28 @@ class PayParkingDatabase {
 
   void _onCreate(Database db, int version) {
     db.execute('''
-      CREATE TABLE payparking(
+      CREATE TABLE paypartrans(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        plate_number TEXT,
+        plateNumber TEXT,
         dateToday TEXT,
         dateTimeToday TEXT,
         dateUntil TEXT,
-        amount TEXT)''');
+        amount TEXT,
+        user TEXT,
+        status TEXT)''');
+
+    db.execute('''
+      CREATE TABLE payparhistory(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        plateNumber TEXT,
+        dateTimein TEXT,
+        dateTimeout TEXT,
+        amount TEXT,
+        penalty TEXT,
+        cutOffviolation TEXT,
+        user TEXT
+        )''');
+
     print("Database was created!");
   }
 
@@ -49,16 +64,28 @@ class PayParkingDatabase {
     // Run migration according database versions
   }
 
-  Future<int> addTrans(String plateNumber, String dateToday, String dateTimeToday, String dateUntil,String amount) async {
+  Future<int> addTrans(String plateNumber, String dateToday, String dateTimeToday, String dateUntil,String amount,String user,int stat) async {
     var client = await db;
-    return client.insert('payparking', {'plate_number':plateNumber,'dateToday':dateToday,'dateTimeToday':dateTimeToday,'dateUntil':dateUntil,'amount':amount});
+    return client.insert('paypartrans', {'plateNumber':plateNumber,'dateToday':dateToday,'dateTimeToday':dateTimeToday,'dateUntil':dateUntil,'amount':amount,'user':user,'status':stat});
   }
 
   Future<List> fetchAll() async {
     var client = await db;
-    return client.query('payparking');
+    return client.query('paypartrans Where status = 1');
+    // where status = 1
   }
 
+  Future<int> addTransHistory(String plateNumber,String dateIn,String dateNow,String amountPay,String penalty,String violation,String user) async {
+    var client = await db;
+    return client.insert('payparhistory', {'plateNumber':plateNumber,'dateTimein':dateIn,'dateTimeout':dateNow,'amount':amountPay,'penalty':penalty,'cutOffviolation':violation,'user':user});
+  }
+
+  Future<int> updatePayTranStat(int id) async{
+    var client = await db;
+    print('ok kauue');
+    return client.update('paypartrans', {'status': '0'}, where: 'id = ?', whereArgs: [id]);
+
+  }
 
 
 //  Future<Car> fetchCar(int id) async {

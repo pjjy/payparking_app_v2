@@ -79,17 +79,23 @@ class _ParkTrans extends State<ParkTrans> {
       String plateNumber = plateNoController.text;
       var today = new DateTime.now();
       var dateToday = DateFormat("yyyy-MM-dd").format(new DateTime.now());
-      var dateTimeToday = DateFormat("yyyy-MM-dd hh:mm a").format(new DateTime.now());
+      var dateTimeToday = DateFormat("H:mm").format(new DateTime.now());
       var dateUntil = DateFormat("yyyy-MM-dd").format(today.add(new Duration(days: 7)));
       String amount = selectedRadio.toString();
+      var stat = 1;
+      var user = 'boss rrrrr';
+
 
       print(plateNumber);
       print(dateToday);
       print(dateTimeToday);
       print(dateUntil);
       print(amount);
+      print(stat);
+      print(user);
 
-      await db.addTrans(plateNumber,dateToday,dateTimeToday,dateUntil,amount);
+
+      await db.addTrans(plateNumber,dateToday,dateTimeToday,dateUntil,amount,user,stat);
 
   }
 
