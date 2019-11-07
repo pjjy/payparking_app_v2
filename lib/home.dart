@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'parkingtrans.dart';
 import 'parkingTransList.dart';
+import 'history.dart';
 
 class HomeT extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class _Home extends State<HomeT> {
           case 2:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: Text('History ne'),
+                child: HistoryTransList(),
               );
             });
             break;

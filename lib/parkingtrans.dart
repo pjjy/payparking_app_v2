@@ -55,7 +55,7 @@ class _ParkTrans extends State<ParkTrans> {
             // return object of type Dialog
             return CupertinoAlertDialog(
               title: new Text(plateNoController.text),
-              content: new Text("Successfully Added"),
+              content: new Text("Successfully Added ,Printing the Receipt"),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
@@ -118,7 +118,7 @@ class _ParkTrans extends State<ParkTrans> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
-        title: Text('Park Me'),
+        title: Text('Park Me',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.black),),
         textTheme: TextTheme(
             title: TextStyle(
                 color: Colors.black,

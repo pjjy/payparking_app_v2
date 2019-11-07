@@ -23,28 +23,20 @@ class _ParkTransList extends State<ParkTransList> {
     setState((){
       plateData = res;
     });
-    geData();
+
   }
 
-  Future geData() async{
-    print('Pending refresh');
-  }
+
 
   Future passDataToHistoryWithOutPay(id,plateNo,dateTimeIn,dateTimeNow,amount,user) async{
 
     String plateNumber = plateNo;
-    final dateIn = DateFormat("yyyy-MM-dd").format(dateTimeIn);
-    final dateNow = DateFormat("yyyy-MM-dd:hh:mm a").format(dateTimeNow);
+    final dateIn = DateFormat("yyyy-MM-dd : hh:mm a").format(dateTimeIn);
+    final dateNow = DateFormat("yyyy-MM-dd : hh:mm a").format(dateTimeNow);
     var amountPay = amount;
     var penalty = 0;
     var violation = 0;
-    print(id);
-    print(plateNumber);
-    print(dateIn);
-    print(dateNow);
-    print(amountPay);
-    print(penalty);
-    print(user);
+
 
     //insert to history tbl
     await db.addTransHistory(plateNumber,dateIn,dateNow,amountPay.toString(),penalty.toString(),violation.toString(),user);
@@ -57,22 +49,13 @@ class _ParkTransList extends State<ParkTransList> {
   Future passDataToHistoryWithPay(id,plateNo,dateTimeIn,dateTimeNow,amount,user,penalty,violation) async{
 
     String plateNumber = plateNo;
-    final dateIn = DateFormat("yyyy-MM-dd").format(dateTimeIn);
-    final dateNow = DateFormat("yyyy-MM-dd:hh:mm a").format(dateTimeNow);
+    final dateIn = DateFormat("yyyy-MM-dd : hh:mm a").format(dateTimeIn);
+    final dateNow = DateFormat("yyyy-MM-dd : hh:mm a").format(dateTimeNow);
     var amountPay = amount;
 
-    print(id);
-    print(plateNumber);
-    print(dateIn);
-    print(dateNow);
-    print(amountPay);
-    print(penalty);
-    print(violation);
-    print(user);
-    print('pass ni bayad');
 
     //insert to history tbl
-    await db.addTransHistory(plateNumber,dateIn,dateNow,amountPay.toString(),penalty.toString(),violation.toString(),user);
+    await db.addTransHistory(plateNumber,dateIn.toString(),dateNow,amountPay.toString(),penalty.toString(),violation.toString(),user);
     //update  status to 0
     await db.updatePayTranStat(id);
     getTransData();
@@ -93,26 +76,13 @@ class _ParkTransList extends State<ParkTransList> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
-        title: Text('Transaction List'),
+        title: Text('Transactions List',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.black),),
         textTheme: TextTheme(
             title: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold
             )
         ),
-
-        actions: <Widget>[
-
-          FlatButton.icon(
-//            color: Colors.red,
-            icon: Icon(Icons.sync),
-            label: Text('Last Sync:10/20/19'),
-            onPressed: () {
-              //Code to execute
-              //...
-            },
-          ),
-        ],
       ),
 
         body:Column(
@@ -143,17 +113,16 @@ class _ParkTransList extends State<ParkTransList> {
                     final dateTimeIn = DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2]),int.parse(hour[0]),int.parse(hour[1]));
                     final dateTimeNow = DateTime.now();
                     final difference = dateTimeNow.difference(dateTimeIn).inHours;
-
                     final fifteenAgo = new DateTime.now().subtract(new Duration(hours: difference));
                     final timeAg = timeAgo.format(fifteenAgo);
 
                     if(difference < 2){
-                      alertText = "Do you log out this person?";
+                      alertText = "Do you want to log out this person?";
                       alertButton = "Logout";
                       trigger = 0;
 
                     }if(difference >= 2){
-                      alertText = "Please Print a Receipt";
+                      alertText = "Do you want log out this person?";
                       alertButton = "Logout & Print";
                       trigger = 1;
                     }
@@ -245,6 +214,7 @@ class _ParkTransList extends State<ParkTransList> {
                     }
                     if(difference >= 15 && vType == '50'){
                       penalty = 130;
+                      violation = 500;
                     }
                     if(difference >= 16 && vType == '50'){
                       penalty = 140;
@@ -252,9 +222,9 @@ class _ParkTransList extends State<ParkTransList> {
                     if(difference >= 17 && vType == '50'){
                       penalty = 150;
                     }
-                    if(difference >= 18 && vType == '50'){
-                      violation = 500;
-                    }
+//                    if(DateFormat("H:mm").format(new DateTime.now()) == 18 && vType == '50'){
+//                      violation = 500;
+//                    }
                     var totalAmount = penalty + violation + num.parse(vType);
 
 

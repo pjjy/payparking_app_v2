@@ -57,6 +57,12 @@ class PayParkingDatabase {
         user TEXT
         )''');
 
+    db.execute('''
+      CREATE TABLE synchistory(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        syncDate TEXT
+        )''');
+
     print("Database was created!");
   }
 
@@ -72,6 +78,23 @@ class PayParkingDatabase {
   Future<List> fetchAll() async {
     var client = await db;
     return client.query('paypartrans Where status = 1');
+    // where status = 1
+  }
+
+  Future<List> fetchSync() async{
+    var client = await db;
+    return client.query('synchistory ORDER BY id DESC LIMIT 1');
+  }
+
+  Future<int> insertSyncDate(String date) async{
+    var client = await db;
+    return client.insert('synchistory', {'syncDate':date});
+  }
+
+
+  Future<List> fetchAllHistory() async {
+    var client = await db;
+    return client.query('payparhistory ORDER BY id DESC');
     // where status = 1
   }
 
