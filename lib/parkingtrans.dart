@@ -7,10 +7,8 @@ import 'package:nice_button/nice_button.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:payparking_app/utils/db_helper.dart';
-
-
-
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
 
 class ParkTrans extends StatefulWidget {
@@ -22,14 +20,26 @@ class _ParkTrans extends State<ParkTrans> {
   final db = PayParkingDatabase();
 
 
-//  File pickedImage;
-//  Future pickImage() async{
-//    var tempStore = await ImagePicker.pickImage(source: ImageSource.camera);
-//    setState(() {
-//      pickedImage = tempStore;
-//    });
-//  }
-
+  File pickedImage;
+  String wordFin;
+  Future pickImage() async{
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      pickedImage = imageFile;
+    });
+    final image = FirebaseVisionImage.fromFile(imageFile);
+    TextRecognizer recognizedText = FirebaseVision.instance.textRecognizer();
+    VisionText readText = await recognizedText.processImage(image);
+    for(TextBlock block in readText.blocks){
+      for(TextLine line in block.lines){
+        for(TextElement word in line.elements){
+          print(word.text);
+          wordFin = word.text;
+        }
+      }
+    }
+    plateNoController.text = wordFin;
+  }
 
   TextEditingController plateNoController = TextEditingController();
 
@@ -96,7 +106,15 @@ class _ParkTrans extends State<ParkTrans> {
 
 
       await db.addTrans(plateNumber,dateToday,dateTimeToday,dateUntil,amount,user,stat);
-
+      Fluttertoast.showToast(
+          msg: "Successfully Added to Transactions",
+          toastLength: Toast.LENGTH_LONG ,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 2,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
   }
 
   int selectedRadio;
@@ -113,6 +131,8 @@ class _ParkTrans extends State<ParkTrans> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -138,9 +158,7 @@ class _ParkTrans extends State<ParkTrans> {
                 icon: Icons.camera_alt,
                 padding: const EdgeInsets.all(15),
                 background: Colors.blue,
-                onPressed: () {
-                print("hello");
-              },
+                onPressed:pickImage,
              ),
           ),
 
@@ -193,14 +211,14 @@ class _ParkTrans extends State<ParkTrans> {
             ),
           ),
 
-          Padding( padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+          Padding( padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
            child: Container(
-              width: 300.0,
+//              width: 400.0,
               child: ConfirmationSlider(
                 shadow:BoxShadow(color: Colors.black38, offset: Offset(1, 0),blurRadius: 1,spreadRadius: 1,),
                 foregroundColor:Colors.blue,
                 height:170.0,
-                width : 570.0,
+                width : width-60,
                 onConfirmation: () => confirmed(),
             ),),
         ),

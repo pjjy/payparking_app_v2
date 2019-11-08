@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:payparking_app/utils/db_helper.dart';
-import 'package:timeago/timeago.dart' as timeAgo;
+
+
 
 class HistoryTransList extends StatefulWidget {
   @override
@@ -27,6 +28,9 @@ class _HistoryTransList extends State<HistoryTransList> {
   Future insertSyncDate() async{
     await db.insertSyncDate(DateFormat("yyyy-MM-dd : hh:mm a").format(new DateTime.now()).toString());
     getSyncDate();
+
+
+
   }
 
   Future getHistoryTransData() async {
@@ -73,7 +77,7 @@ class _HistoryTransList extends State<HistoryTransList> {
                   // return object of type Dialog
                   return CupertinoAlertDialog(
                     title: new Text("Confirm Data Sync"),
-                    content: new Text("Are you sure you to sync?"),
+                    content: new Text("Are you sure you want to sync?"),
                     actions: <Widget>[
                       // usually buttons at the bottom of the dialog
                       new FlatButton(

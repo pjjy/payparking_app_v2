@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:payparking_app/utils/db_helper.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 
@@ -43,6 +44,16 @@ class _ParkTransList extends State<ParkTransList> {
     //update  status to 0
     await db.updatePayTranStat(id);
     getTransData();
+    //code for print
+    Fluttertoast.showToast(
+        msg: "Successfully added to history",
+        toastLength: Toast.LENGTH_LONG ,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
 
   }
 
@@ -60,6 +71,15 @@ class _ParkTransList extends State<ParkTransList> {
     await db.updatePayTranStat(id);
     getTransData();
     //code for print
+    Fluttertoast.showToast(
+        msg: "Successfully added to history",
+        toastLength: Toast.LENGTH_LONG ,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 2,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
   }
 
   @override
