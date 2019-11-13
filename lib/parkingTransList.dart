@@ -24,7 +24,6 @@ class _ParkTransList extends State<ParkTransList> {
     setState((){
       plateData = res;
     });
-
   }
 
 

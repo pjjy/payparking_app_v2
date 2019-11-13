@@ -94,20 +94,33 @@ class PayParkingDatabase {
 
   Future<List> fetchAllHistory() async {
     var client = await db;
-    return client.query('payparhistory ORDER BY id DESC');
-    // where status = 1
+//    return client.query('payparhistory ORDER BY id DESC');
+    var res = await client.query('payparhistory ORDER BY id DESC');
+    if (res.isNotEmpty) {
+      return client.query('payparhistory ORDER BY id DESC');
+    }
+    else{
+      return [];
+    }
   }
+
+//  fetchAllHistoryCount() async{
+//    int count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM table_name'));
+//
+//    var client = await db;
+//    return client.query('synchistory ORDER BY id DESC LIMIT 1');
+//  }
 
   Future<int> addTransHistory(String plateNumber,String dateIn,String dateNow,String amountPay,String penalty,String violation,String user) async {
     var client = await db;
     return client.insert('payparhistory', {'plateNumber':plateNumber,'dateTimein':dateIn,'dateTimeout':dateNow,'amount':amountPay,'penalty':penalty,'cutOffviolation':violation,'user':user});
   }
 
+
+
   Future<int> updatePayTranStat(int id) async{
     var client = await db;
-    print('ok kauue');
     return client.update('paypartrans', {'status': '0'}, where: 'id = ?', whereArgs: [id]);
-
   }
 
 

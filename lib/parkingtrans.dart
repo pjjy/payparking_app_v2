@@ -21,8 +21,12 @@ class _ParkTrans extends State<ParkTrans> {
 
 
   File pickedImage;
-  String wordFin;
   Future pickImage() async{
+    String platePattern = r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+"; //email regex  alisdan ug platenumber
+    RegExp regEx = RegExp(platePattern);
+    String platePatternNew;
+
+
     var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       pickedImage = imageFile;
@@ -30,16 +34,21 @@ class _ParkTrans extends State<ParkTrans> {
     final image = FirebaseVisionImage.fromFile(imageFile);
     TextRecognizer recognizedText = FirebaseVision.instance.textRecognizer();
     VisionText readText = await recognizedText.processImage(image);
-    for(TextBlock block in readText.blocks){
-      for(TextLine line in block.lines){
-        for(TextElement word in line.elements){
-          print(word.text);
-          wordFin = word.text;
+    if(regEx.hasMatch(readText.text)){
+        print(true);
+        platePatternNew = readText.text;
+//        regEx.firstMatch(platePatternNew).group(0);
+        if (this.mounted) {
+          setState(() {
+            print(regEx.firstMatch(platePatternNew).group(0));
+            plateNoController.text = regEx.firstMatch(platePatternNew).group(0);
+          });
         }
-      }
+    }else{
+        print(false);
     }
-    plateNoController.text = wordFin;
   }
+
 
   TextEditingController plateNoController = TextEditingController();
 
@@ -96,13 +105,13 @@ class _ParkTrans extends State<ParkTrans> {
       var user = 'boss rrrrr';
 
 
-      print(plateNumber);
-      print(dateToday);
-      print(dateTimeToday);
-      print(dateUntil);
-      print(amount);
-      print(stat);
-      print(user);
+//      print(plateNumber);
+//      print(dateToday);
+//      print(dateTimeToday);
+//      print(dateUntil);
+//      print(amount);
+//      print(stat);
+//      print(user);
 
 
       await db.addTrans(plateNumber,dateToday,dateTimeToday,dateUntil,amount,user,stat);

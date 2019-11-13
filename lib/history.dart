@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:payparking_app/utils/db_helper.dart';
-
+import 'syncing.dart';
+import 'constants.dart';
 
 
 class HistoryTransList extends StatefulWidget {
@@ -21,16 +22,19 @@ class _HistoryTransList extends State<HistoryTransList> {
     setState((){
       syncData = res;
     });
-  }
+
+    if(syncData.isEmpty){
+        print("way sud");
+    }else{
+      print(syncData[0]['syncDate']);
+    }
+  }// to be delete soon
 
 
 
   Future insertSyncDate() async{
     await db.insertSyncDate(DateFormat("yyyy-MM-dd : hh:mm a").format(new DateTime.now()).toString());
     getSyncDate();
-
-
-
   }
 
   Future getHistoryTransData() async {
@@ -48,6 +52,8 @@ class _HistoryTransList extends State<HistoryTransList> {
     getSyncDate();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -64,39 +70,17 @@ class _HistoryTransList extends State<HistoryTransList> {
             )
         ),
         actions: <Widget>[
-          FlatButton.icon(
-//            color: Colors.red,
-            icon: Icon(Icons.sync),
-            label: Text('Database Sync'),
-//            label: Text('Last Sync'+syncData[0]['syncDate']),
-            onPressed: () {
-              showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (BuildContext context) {
-                  // return object of type Dialog
-                  return CupertinoAlertDialog(
-                    title: new Text("Confirm Data Sync"),
-                    content: new Text("Are you sure you want to sync?"),
-                    actions: <Widget>[
-                      // usually buttons at the bottom of the dialog
-                      new FlatButton(
-                        child: new Text("Confirm"),
-                        onPressed: () {
-                          insertSyncDate();
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      new FlatButton(
-                        child: new Text("Close"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: Colors.black),
+
+            onSelected: choiceAction,
+            itemBuilder: (BuildContext context){
+              return Constants.choices.map((String choice){
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
             },
           ),
         ],
@@ -151,6 +135,47 @@ class _HistoryTransList extends State<HistoryTransList> {
       ),
 
     );
+  }
+
+  void choiceAction(String choice){
+    if(choice == Constants.dbSync){
+      showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (BuildContext context) {
+                  // return object of type Dialog
+                  return CupertinoAlertDialog(
+                    title: new Text("Confirm Data Sync"),
+                    content: new Text("Are you sure you want to sync?"),
+                    actions: <Widget>[
+                      // usually buttons at the bottom of the dialog
+                      new FlatButton(
+                        child: new Text("Confirm"),
+                        onPressed: () {
+                          insertSyncDate();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SyncingPage()),
+                          ).then((result) {
+                            Navigator.of(context).pop();
+                          });
+                        },
+                      ),
+                      new FlatButton(
+                        child: new Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+    }else if(choice == Constants.dlReport){
+      print('daily report');
+    }else if(choice == Constants.rgReport){
+      print('range report');
+    }
   }
 
 }

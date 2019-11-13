@@ -3,20 +3,32 @@ import 'package:flutter/cupertino.dart';
 import 'home.dart';
 import 'package:gradient_text/gradient_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:payparking_app/utils/db_helper.dart';
 
 class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => new _SignInPageState();
 }
 class _SignInPageState extends State<SignInPage> {
+  final db = PayParkingDatabase();
+
 
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
 
-  @override
+  Future createDatabase() async{
+     await db.init();
+  }
 
+  @override
+  void initState(){
+    super.initState();
+    createDatabase();
+  }
+
+  @override
   void dispose() {
     // Clean up the controller when the Widget is disposed
     _usernameController.dispose();
