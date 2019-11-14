@@ -10,7 +10,6 @@ import 'package:payparking_app/utils/db_helper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
-
 class ParkTrans extends StatefulWidget {
   @override
   _ParkTrans createState() => _ParkTrans();
@@ -19,10 +18,9 @@ class _ParkTrans extends State<ParkTrans> {
 
   final db = PayParkingDatabase();
 
-
   File pickedImage;
   Future pickImage() async{
-    String platePattern = r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+"; //email regex  alisdan ug platenumber
+    String platePattern = r"[A-Z]+\s\d+"; //platenumber regex
     RegExp regEx = RegExp(platePattern);
     String platePatternNew;
 
@@ -34,11 +32,12 @@ class _ParkTrans extends State<ParkTrans> {
     final image = FirebaseVisionImage.fromFile(imageFile);
     TextRecognizer recognizedText = FirebaseVision.instance.textRecognizer();
     VisionText readText = await recognizedText.processImage(image);
+//    print(readText.text);
     if(regEx.hasMatch(readText.text)){
         print(true);
         platePatternNew = readText.text;
-//        regEx.firstMatch(platePatternNew).group(0);
-        if (this.mounted) {
+//        print(readText.text);
+        if(this.mounted){
           setState(() {
             print(regEx.firstMatch(platePatternNew).group(0));
             plateNoController.text = regEx.firstMatch(platePatternNew).group(0);
