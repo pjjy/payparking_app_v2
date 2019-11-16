@@ -54,7 +54,7 @@ class _ParkTrans extends State<ParkTrans> {
               toolbarTitle: 'Cropper',
               toolbarColor: Colors.white,
               toolbarWidgetColor: Colors.black,
-              initAspectRatio: CropAspectRatioPreset.original,
+              initAspectRatio: CropAspectRatioPreset.ratio16x9,
               lockAspectRatio: false),
           iosUiSettings: IOSUiSettings(
             minimumAspectRatio: 1.0,
