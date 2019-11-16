@@ -32,8 +32,6 @@ class _SyncingPage extends State<SyncingPage> {
       Navigator.of(context).pop();
       print('wala pay sulod');
     }else{
-
-
         for (int i = 0; i < hisData.length; i++) {
             appId =  hisData[i]['id'];
             plateNumber = hisData[i]['plateNumber'];
@@ -43,7 +41,6 @@ class _SyncingPage extends State<SyncingPage> {
             penalty = hisData[i]['penalty'];
             cutOffViolation = hisData[i]['cutOffviolation'];
             user = hisData[i]['user'];
-
           await http.post("http://172.16.46.130/e_parking/sync_data",body:{
             "id": appId.toString(),
             "plateNumber": plateNumber,

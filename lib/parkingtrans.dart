@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
@@ -11,41 +12,83 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
 class ParkTrans extends StatefulWidget {
+
   @override
   _ParkTrans createState() => _ParkTrans();
 }
 class _ParkTrans extends State<ParkTrans> {
 
+
   final db = PayParkingDatabase();
 
   File pickedImage;
+
+
   Future pickImage() async{
-    String platePattern = r"[A-Z]+\s\d+"; //platenumber regex
+
+
+    plateNoController.clear();
+    String platePattern = r"([A-Z|\d]+[\s|-][A-Z\d]+)"; //platenumber regex
+//    String platePattern =  r"([A-Z|\d]+[\s|-][0-9]+)";
     RegExp regEx = RegExp(platePattern);
     String platePatternNew;
 
 
-    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+
+
+    var _imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     setState(() {
-      pickedImage = imageFile;
+      pickedImage = _imageFile;
     });
-    final image = FirebaseVisionImage.fromFile(imageFile);
-    TextRecognizer recognizedText = FirebaseVision.instance.textRecognizer();
-    VisionText readText = await recognizedText.processImage(image);
-//    print(readText.text);
-    if(regEx.hasMatch(readText.text)){
-        print(true);
-        platePatternNew = readText.text;
-//        print(readText.text);
-        if(this.mounted){
-          setState(() {
-            print(regEx.firstMatch(platePatternNew).group(0));
-            plateNoController.text = regEx.firstMatch(platePatternNew).group(0);
-          });
+    if(_imageFile!=null){
+      File croppedFile = await ImageCropper.cropImage(
+          sourcePath: _imageFile.path,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9
+          ],
+          androidUiSettings: AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: Colors.white,
+              toolbarWidgetColor: Colors.black,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          iosUiSettings: IOSUiSettings(
+            minimumAspectRatio: 1.0,
+          )
+      );
+
+      setState(() {
+        _imageFile = croppedFile ?? _imageFile;
+      });
+      if(croppedFile!=null){
+      final image = FirebaseVisionImage.fromFile(croppedFile);
+        TextRecognizer recognizedText = FirebaseVision.instance.textRecognizer();
+        VisionText readText = await recognizedText.processImage(image);
+        if(regEx.hasMatch(readText.text)){
+          print(true);
+          platePatternNew = readText.text;
+          if(this.mounted){
+            setState(() {
+              print(regEx.firstMatch(platePatternNew).group(0));
+              plateNoController.text = regEx.firstMatch(platePatternNew).group(0);
+              recognizedText.close();
+            });
+          }
         }
+        else{
+          print(false);
+        }
+      }else{
+        print('No cropped image');
+      }
     }else{
-        print(false);
+      print('No image');
     }
+
   }
 
 
@@ -131,6 +174,7 @@ class _ParkTrans extends State<ParkTrans> {
     super.initState();
     selectedRadio = 0;
   }
+
   void setSelectedRadio(int val){
     setState(() {
       selectedRadio = val;
@@ -158,7 +202,7 @@ class _ParkTrans extends State<ParkTrans> {
 //          physics: BouncingScrollPhysics(),
           children: <Widget>[
             Padding(padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-            child:NiceButton(
+             child:NiceButton(
                 width: 255,
                 elevation: 0.0,
                 radius: 52.0,
@@ -167,6 +211,15 @@ class _ParkTrans extends State<ParkTrans> {
                 padding: const EdgeInsets.all(15),
                 background: Colors.blue,
                 onPressed:pickImage,
+//               onPressed: () {
+//                 Navigator.of(context, rootNavigator: true).push(
+//                    MaterialPageRoute(
+//                     builder: (context){
+//                        return CameraPrev();
+//                     },
+//                   ),
+//                 );
+//               },
              ),
           ),
 
