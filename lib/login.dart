@@ -45,11 +45,16 @@ class _SignInPageState extends State<SignInPage> {
 //        style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black, fontSize: 70, fontFamily: "Billabong"),
 //      ),
 //    );
+//
+    final logoSmall = GradientText("Surface",
+          gradient: LinearGradient(colors: [Colors.deepOrangeAccent, Colors.blueAccent, Colors.pink]),
+          style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 25),
+          textAlign: TextAlign.center);
 
-  final logo = GradientText("PayParking",
-      gradient: LinearGradient(colors: [Colors.deepOrangeAccent, Colors.blue, Colors.pink]),
-      style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 62),
-      textAlign: TextAlign.center);
+    final logo = GradientText("PayParking",
+        gradient: LinearGradient(colors: [Colors.deepOrangeAccent, Colors.blue, Colors.pink]),
+        style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 62),
+        textAlign: TextAlign.center);
 
 
 
@@ -133,6 +138,8 @@ class _SignInPageState extends State<SignInPage> {
               padding: new EdgeInsets.only(left: 30.0, right: 30.0),
               children: <Widget>[
                 SizedBox(height: 100.0),
+                logoSmall,
+                SizedBox(height: 0.0),
                 logo,
                 SizedBox(height: 40.0),
                 username,

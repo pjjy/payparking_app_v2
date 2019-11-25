@@ -4,12 +4,14 @@ import 'package:intl/intl.dart';
 import 'package:payparking_app/utils/db_helper.dart';
 import 'syncing.dart';
 import 'constants.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 
 class HistoryTransList extends StatefulWidget {
   @override
   _HistoryTransList createState() => _HistoryTransList();
 }
+
 class _HistoryTransList extends State<HistoryTransList> {
   final oCcy = new NumberFormat("#,##0.00", "en_US");
   final db = PayParkingDatabase();
@@ -26,23 +28,83 @@ class _HistoryTransList extends State<HistoryTransList> {
     if(syncData.isEmpty){
         print("way sud");
     }else{
-      print(syncData[0]['syncDate']);
+//      print(syncData[0]['syncDate']);
     }
   }// to be delete soon
 
 
 
-  Future insertSyncDate() async{
+   Future insertSyncDate() async{
     await db.insertSyncDate(DateFormat("yyyy-MM-dd : hh:mm a").format(new DateTime.now()).toString());
     getSyncDate();
   }
 
-  Future getHistoryTransData() async {
+   Future getHistoryTransData() async {
     var res = await db.fetchAllHistory();
     setState((){
       plateData = res;
     });
 
+  }
+
+  Future promptSyncData() async{
+    bool result = await DataConnectionChecker().hasConnection;
+    if(result  == true){
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return CupertinoAlertDialog(
+            title: new Text("Confirm Data Sync"),
+            content: new Text("Are you sure you want to sync?"),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text("Confirm"),
+                onPressed: () {
+                  insertSyncDate();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SyncingPage()),
+                  ).then((result) {
+                    Navigator.of(context).pop();
+                  });
+                },
+              ),
+              new FlatButton(
+                child: new Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }else{
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return CupertinoAlertDialog(
+            title: new Text("Connection Problem"),
+            content: new Text("Please Connect to the wifi hotspot or turn the wifi on"),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -52,11 +114,8 @@ class _HistoryTransList extends State<HistoryTransList> {
     getSyncDate();
   }
 
-
-
   @override
-  Widget build(BuildContext context) {
-
+   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -99,7 +158,7 @@ class _HistoryTransList extends State<HistoryTransList> {
                   var f = index;
                   f++;
 
-                  var totalAmount = int.parse(plateData[index]["penalty"]) + int.parse(plateData[index]["cutOffviolation"]) + int.parse(plateData[index]["amount"]);
+                  var totalAmount = int.parse(plateData[index]["penalty"]) + int.parse(plateData[index]["amount"]);
 
                   return InkWell(
                     child: Card(
@@ -109,16 +168,15 @@ class _HistoryTransList extends State<HistoryTransList> {
 //                       crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           ListTile(
-                            title:Text('$f. Plate No : ${plateData[index]["plateNumber"]}',style: TextStyle(fontSize: 26.0),),
+                            title:Text('$f.Plt No : ${plateData[index]["plateNumber"]}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26.0),),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text('      Time In : ${plateData[index]["dateTimein"]}',style: TextStyle(fontSize: 17.0),),
-                                Text('      Time Out : ${plateData[index]["dateTimeout"]}',style: TextStyle(fontSize: 17.0),),
-                                Text('      Entrance Fee : '+oCcy.format(int.parse(plateData[index]["amount"])),style: TextStyle(fontSize: 17.0),),
-                                Text('      Penalty : '+oCcy.format(int.parse(plateData[index]["penalty"])),style: TextStyle(fontSize: 17.0),),
-                                Text('      Cut-off Violation : '+oCcy.format(int.parse(plateData[index]["cutOffviolation"])),style: TextStyle(fontSize: 17.0),),
-                                Text('      Total : '+oCcy.format(totalAmount),style: TextStyle(fontSize: 17.0),),
+                                Text('     Time In : ${plateData[index]["dateTimein"]}',style: TextStyle(fontSize: 17.0),),
+                                Text('     Time Out : ${plateData[index]["dateTimeout"]}',style: TextStyle(fontSize: 17.0),),
+                                Text('     Entrance Fee : '+oCcy.format(int.parse(plateData[index]["amount"])),style: TextStyle(fontSize: 17.0),),
+                                Text('     Penalty : '+oCcy.format(int.parse(plateData[index]["penalty"])),style: TextStyle(fontSize: 17.0),),
+                                Text('     Total : '+oCcy.format(totalAmount),style: TextStyle(fontSize: 17.0),),
                               ],
                             ),
 //                               trailing: Icon(Icons.more_vert),
@@ -139,38 +197,7 @@ class _HistoryTransList extends State<HistoryTransList> {
 
   void choiceAction(String choice){
     if(choice == Constants.dbSync){
-      showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (BuildContext context) {
-                  // return object of type Dialog
-                  return CupertinoAlertDialog(
-                    title: new Text("Confirm Data Sync"),
-                    content: new Text("Are you sure you want to sync?"),
-                    actions: <Widget>[
-                      // usually buttons at the bottom of the dialog
-                      new FlatButton(
-                        child: new Text("Confirm"),
-                        onPressed: () {
-                          insertSyncDate();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SyncingPage()),
-                          ).then((result) {
-                            Navigator.of(context).pop();
-                          });
-                        },
-                      ),
-                      new FlatButton(
-                        child: new Text("Close"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+      promptSyncData();
     }else if(choice == Constants.dlReport){
       print('daily report');
     }else if(choice == Constants.rgReport){

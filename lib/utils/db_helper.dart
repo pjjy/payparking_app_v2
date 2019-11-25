@@ -53,7 +53,6 @@ class PayParkingDatabase {
         dateTimeout TEXT,
         amount TEXT,
         penalty TEXT,
-        cutOffviolation TEXT,
         user TEXT
         )''');
 
@@ -111,9 +110,9 @@ class PayParkingDatabase {
 //    return client.query('synchistory ORDER BY id DESC LIMIT 1');
 //  }
 
-  Future<int> addTransHistory(String plateNumber,String dateIn,String dateNow,String amountPay,String penalty,String violation,String user) async {
+  Future<int> addTransHistory(String plateNumber,String dateIn,String dateNow,String amountPay,String penalty,String user) async {
     var client = await db;
-    return client.insert('payparhistory', {'plateNumber':plateNumber,'dateTimein':dateIn,'dateTimeout':dateNow,'amount':amountPay,'penalty':penalty,'cutOffviolation':violation,'user':user});
+    return client.insert('payparhistory', {'plateNumber':plateNumber,'dateTimein':dateIn,'dateTimeout':dateNow,'amount':amountPay,'penalty':penalty,'user':user});
   }
 
 

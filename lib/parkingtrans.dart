@@ -34,8 +34,6 @@ class _ParkTrans extends State<ParkTrans> {
     String platePatternNew;
 
 
-
-
     var _imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       pickedImage = _imageFile;
@@ -159,7 +157,7 @@ class _ParkTrans extends State<ParkTrans> {
       await db.addTrans(plateNumber,dateToday,dateTimeToday,dateUntil,amount,user,stat);
       Fluttertoast.showToast(
           msg: "Successfully Added to Transactions",
-          toastLength: Toast.LENGTH_LONG ,
+          toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 2,
           backgroundColor: Colors.black54,
