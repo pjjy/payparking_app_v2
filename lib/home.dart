@@ -34,6 +34,12 @@ class _Home extends State<HomeT> {
               fontSize: 13.0, // insert your font size here
             ),),
           ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.gear_big),
+            title: Text('Setting',style: TextStyle(
+              fontSize: 13.0, // insert your font size here
+            ),),
+          ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -45,21 +51,28 @@ class _Home extends State<HomeT> {
                 child: ParkTrans(),
               );
             });
-            break;
+          break;
           case 1:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
                 child: ParkTransList(),
               );
             });
-            break;
+          break;
           case 2:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
                 child: HistoryTransList(),
               );
             });
-            break;
+          break;
+          case 3:
+            returnValue = CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: Text("settings ne"),
+              );
+            });
+          break;
         }
         return returnValue;
       },

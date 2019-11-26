@@ -162,9 +162,6 @@ class _ParkTransList extends State<ParkTransList> {
                    itemCount: plateData == null ? 0: plateData.length,
                    itemBuilder: (BuildContext context, int index) {
 
-
-
-
                     var f = index;
                     f++;
                     var trigger;
@@ -181,142 +178,146 @@ class _ParkTransList extends State<ParkTransList> {
 
                     final dateTimeIn = DateTime(int.parse(date[0]),int.parse(date[1]),int.parse(date[2]),int.parse(hour[0]),int.parse(hour[1]));
                     final dateTimeNow = DateTime.now();
-                    final difference = dateTimeNow.difference(dateTimeIn).inHours;
-                    final fifteenAgo = new DateTime.now().subtract(new Duration(hours: difference));
+                    final difference = dateTimeNow.difference(dateTimeIn).inMinutes;
+                    final fifteenAgo = new DateTime.now().subtract(new Duration(minutes: difference));
                     final timeAg = timeAgo.format(fifteenAgo);
-
-                    if(difference < 2){
+                    print(difference);
+                    if(difference <= 90){
                       alertText = "Do you want to log out this person?";
                       alertButton = "Logout";
                       trigger = 0;
                       cardColor = Colors.white;
-                    }if(difference >= 2){
+                    }if(difference >= 90 && difference <= 119){
+                      alertText = "Do you want to log out this person?";
+                      alertButton = "Logout";
+                      trigger = 0;
+                      cardColor = Colors.blueAccent.withOpacity(.3);
+                    }if(difference >= 120){
                       alertText = "Do you want log out this person?";
                       alertButton = "Logout & Print";
                       trigger = 1;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-
-                    if(difference >= 3 && vType == '100'){
+                    if(difference >= 120 && vType == '100'){
                       penalty = 20;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 4 && vType == '100'){
+                    if(difference >= 240 && vType == '100'){
                       penalty = 40;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 5 && vType == '100'){
+                    if(difference >= 300 && vType == '100'){
                       penalty = 60;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 6 && vType == '100'){
+                    if(difference >= 360 && vType == '100'){
                       penalty = 80;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 7 && vType == '100'){
+                    if(difference >= 420 && vType == '100'){
                       penalty = 100;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 8 && vType == '100'){
+                    if(difference >= 480 && vType == '100'){
                       penalty = 120;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 9 && vType == '100'){
+                    if(difference >= 540 && vType == '100'){
                       penalty = 140;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 10 && vType == '100'){
+                    if(difference >= 600 && vType == '100'){
                       penalty = 160;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 11 && vType == '100'){
+                    if(difference >= 660 && vType == '100'){
                       penalty = 180;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 12 && vType == '100'){
+                    if(difference >= 720 && vType == '100'){
                       penalty = 200;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 13 && vType == '100'){
+                    if(difference >= 780 && vType == '100'){
                       penalty = 220;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 14 && vType == '100'){
+                    if(difference >= 840 && vType == '100'){
                       penalty = 240;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 15 && vType == '100'){
+                    if(difference >= 900 && vType == '100'){
                       penalty = 260;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 16 && vType == '100'){
+                    if(difference >= 960 && vType == '100'){
                       penalty = 280;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 17 && vType == '100'){
+                    if(difference >= 1020 && vType == '100'){
                       penalty = 300;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
 
                     //for 2 wheels
-                    if(difference >= 3 && vType == '50'){
-                      penalty = 10;
-                      cardColor = Colors.redAccent.withOpacity(.3);
-                    }
-                    if(difference >= 4 && vType == '50'){
+                    if(difference >= 120 && vType == '50'){
                       penalty = 20;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 5 && vType == '50'){
-                      penalty = 30;
-                      cardColor = Colors.redAccent.withOpacity(.3);
-                    }
-                    if(difference >= 6 && vType == '50'){
+                    if(difference >= 240 && vType == '50'){
                       penalty = 40;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 7 && vType == '50'){
-                      penalty = 50;
-                      cardColor = Colors.redAccent.withOpacity(.3);
-                    }
-                    if(difference >= 8 && vType == '50'){
+                    if(difference >= 300 && vType == '50'){
                       penalty = 60;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 9 && vType == '50'){
-                      penalty = 70;
-                      cardColor = Colors.redAccent.withOpacity(.3);
-                    }
-                    if(difference >= 10 && vType == '50'){
+                    if(difference >= 360 && vType == '50'){
                       penalty = 80;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 11 && vType == '50'){
-                      penalty = 90;
-                      cardColor = Colors.redAccent.withOpacity(.3);
-                    }
-                    if(difference >= 12 && vType == '50'){
+                    if(difference >= 420 && vType == '50'){
                       penalty = 100;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 13 && vType == '50'){
-                      penalty = 110;
-                      cardColor = Colors.redAccent.withOpacity(.3);
-                    }
-                    if(difference >= 14 && vType == '50'){
+                    if(difference >= 480 && vType == '50'){
                       penalty = 120;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 15 && vType == '50'){
-                      penalty = 130;
-                      cardColor = Colors.redAccent.withOpacity(.3);
-                    }
-                    if(difference >= 16 && vType == '50'){
+                    if(difference >= 540 && vType == '50'){
                       penalty = 140;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
-                    if(difference >= 17 && vType == '50'){
-                      penalty = 150;
+                    if(difference >= 600 && vType == '50'){
+                      penalty = 160;
+                      cardColor = Colors.redAccent.withOpacity(.3);
+                    }
+                    if(difference >= 660 && vType == '50'){
+                      penalty = 180;
+                      cardColor = Colors.redAccent.withOpacity(.3);
+                    }
+                    if(difference >= 720 && vType == '50'){
+                      penalty = 200;
+                      cardColor = Colors.redAccent.withOpacity(.3);
+                    }
+                    if(difference >= 780 && vType == '50'){
+                      penalty = 220;
+                      cardColor = Colors.redAccent.withOpacity(.3);
+                    }
+                    if(difference >= 840 && vType == '50'){
+                      penalty = 240;
+                      cardColor = Colors.redAccent.withOpacity(.3);
+                    }
+                    if(difference >= 900 && vType == '50'){
+                      penalty = 260;
+                      cardColor = Colors.redAccent.withOpacity(.3);
+                    }
+                    if(difference >= 960 && vType == '50'){
+                      penalty = 280;
+                      cardColor = Colors.redAccent.withOpacity(.3);
+                    }
+                    if(difference >= 1020 && vType == '50'){
+                      penalty = 300;
                       cardColor = Colors.redAccent.withOpacity(.3);
                     }
 //                    if(DateFormat("H:mm").format(new DateTime.now()) == 18 && vType == '50'){
